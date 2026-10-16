@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MashaJS — cat artwork workshop</title>
+    <link rel="stylesheet" href="preview.css">
+  </head>
+  <body>
+    <header>
+      <div class="eyebrow">MashaJS · Two cats, piece by piece</div>
+      <h1>The cat workshop</h1>
+      <p>Edit a part in <code>artwork/</code>, save it, then refresh this page. Every pose using that part will pick up the change, including on websites using MashaJS.</p>
+      <nav aria-label="Preview navigation"><a href="demo.html">Try the moving cats ↗</a><a href="artwork/manifest.json">Pose layout JSON ↗</a><button id="reload" type="button">Refresh artwork</button></nav>
+    </header>
+    <main>
+      <form class="controls" aria-label="Preview controls">
+        <label>Cat<select id="cat"></select></label>
+        <label>Show<select id="view"><option value="parts">Individual parts</option><option value="poses">Assembled poses</option></select></label>
+        <label id="state-control" hidden>Animation<select id="state"><option value="all">Every animation</option></select></label>
+        <label>Background<select id="background"><option value="checker">Transparent grid</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+        <button id="play" type="button" hidden aria-pressed="false">Pause animation</button>
+      </form>
+      <p id="status" role="status">Loading artwork…</p>
+      <p id="hint">Each card links to its SVG source. Open the file in a vector editor or text editor; keep the artboard and part coordinates unchanged.</p>
+      <div id="gallery" class="parts" aria-label="Artwork previews"></div>
+      <noscript>This gallery needs JavaScript to load and assemble the SVG parts.</noscript>
+    </main>
+    <footer>One shared set of SVG files. No export or build step needed.</footer>
+    <script type="module" src="preview.js"></script>
+  </body>
+</html>

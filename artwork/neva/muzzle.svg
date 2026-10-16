@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Neva Masquerade · muzzle</title>
+  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <g id="muzzle">
+    <ellipse cx="-5" cy="11" rx="8" ry="6" fill="#fffdf8" />
+    <ellipse cx="6" cy="11" rx="8" ry="6" fill="#fffdf8" />
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Calico · eyes-side</title>
+  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <g id="eyes-side">
+    <ellipse cx="-10" cy="3" rx="4.5" ry="4.3" fill="#554f4d" />
+    <ellipse cx="-10" cy="3" rx="3.4" ry="3.5" fill="#a0ad70" />
+    <ellipse cx="-9" cy="3" rx="1.3" ry="3" fill="#393c3d" />
+    <ellipse cx="-11" cy="1.5" rx="1" ry="1" fill="#ffffff" />
+    <ellipse cx="11" cy="3" rx="4.5" ry="4.3" fill="#554f4d" />
+    <ellipse cx="11" cy="3" rx="3.4" ry="3.5" fill="#a0ad70" />
+    <ellipse cx="12" cy="3" rx="1.3" ry="3" fill="#393c3d" />
+    <ellipse cx="10" cy="1.5" rx="1" ry="1" fill="#ffffff" />
+  </g>
+</svg>
