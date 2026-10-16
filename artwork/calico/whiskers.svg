@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <title>Calico · whiskers</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
   <g id="whiskers">
-    <path d="M -12 11 L -26 9 M -12 14 L -25 16 M 13 11 L 26 9 M 13 14 L 25 16" fill="none" stroke="#ad9e947f" stroke-width="0.8" />
+    <path d="M -7 10 Q -13 8 -17 9 Q -12 9 -7 10 M -7 11 Q -13 11 -16 14 Q -12 12 -7 11 M 7 10 Q 13 8 17 9 Q 12 9 7 10 M 7 11 Q 13 11 16 14 Q 12 12 7 11" fill="#ae9b8c"/>
   </g>
 </svg>

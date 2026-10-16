@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Calico · ears-side</title>
+  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
+  <g id="ears-side">
+    <path d="M 6 -19 Q 16 -23 21 -23 Q 24 -24 22 -20 Q 20 -15 16 -10 L 11 -13 Z" fill="#e7a45c" stroke="#6c5b52" stroke-width="0.85"/>
+    <path d="M 16 -12 L 21 -21 Q 18 -20 14 -15 Z" fill="#fffdf8"/>
+    <path d="M -7 -11 C -8 -19 0 -28 6 -29 Q 10 -31 10 -24 Q 11 -17 8 -12 L 6 -12 L 5 -10 L 3 -10 L 2 -8 L -1 -8 L -1 -10 L -4 -9 L -3 -11 Z" fill="#fffdf8"/>
+    <path d="M -10 -21 Q -3 -27 6 -29 Q 10 -31 10 -24 Q 11 -18 9 -14" fill="none" stroke="#6c5b52" stroke-width="0.9"/>
+    <path d="M -4 -16 Q -1 -23 6 -27 Q 9 -29 8 -18 L 6 -19 L 7 -17 L 5 -17 L 6 -16 L 3 -14 L 1 -14 L 2 -16 L 0 -15 L 1 -17 Z" fill="#efa99a"/>
+  </g>
+</svg>

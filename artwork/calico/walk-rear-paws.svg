@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Calico · walk-rear-paws</title>
+  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
+  <g id="walk-rear-paws">
+    <path d="M 21 64 L 20 74 L 21 74 Q 18 81 22 82 Q 27 84 31 81 Q 33 77 28 76 L 28 64" fill="#fffdf8" stroke="#6c5b52" stroke-width="0.85"/>
+    <path d="M 26 79 Q 27 81 26 82 M 29 78 Q 30 80 29 81" fill="none" stroke="#c6b09d" stroke-width="0.6"/>
+    <path d="M 35 64 L 34 74 L 35 74 Q 32 81 36 82 Q 41 84 45 81 Q 47 77 42 76 L 42 64" fill="#fffdf8" stroke="#6c5b52" stroke-width="0.85"/>
+    <path d="M 40 79 Q 41 81 40 82 M 43 78 Q 44 80 43 81" fill="none" stroke="#c6b09d" stroke-width="0.6"/>
+  </g>
+</svg>
