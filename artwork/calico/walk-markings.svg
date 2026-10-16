@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <title>Calico · walk-markings</title>
-  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
-  <g id="walk-markings">
-    <path d="M 24 54 Q 29 48 37 49 Q 39 53 38 57 L 36 56 L 36 60 L 34 59 L 34 62 Q 29 61 28 58 L 27 59 Z" fill="#625650"/>
-    <path d="M 39 49 Q 47 48 51 51 L 50 55 L 48 54 L 49 58 L 46 57 L 46 60 Q 41 59 40 55 L 38 56 Z" fill="#e7a45c"/>
-  </g>
-</svg>

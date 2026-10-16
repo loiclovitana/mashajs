@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
     <title>MashaJS — moving cats demo</title>
     <style>
       * { box-sizing: border-box; }
@@ -27,7 +28,7 @@
       <p>Leave the mouse still to see them settle, wash, and doze. Their artwork and personalities can be configured independently.</p>
       <div class="controls">
         <button id="toggle" type="button" aria-pressed="false">Pause cats</button>
-        <a href="index.html">Artwork &amp; pose gallery</a>
+        <a href="index.html">Back to the frame studio</a>
       </div>
       <p id="status" role="status"></p>
       <p class="note">Two softly illustrated companions. This page uses the same automatic entry point as an embedded installation, with no framework or build step.</p>
@@ -38,7 +39,8 @@
       const button = document.querySelector('#toggle');
       const status = document.querySelector('#status');
       function describe() {
-        status.textContent = paused ? 'The cats are taking a break.' : cats.getState().active
+        const state = cats.getState();
+        status.textContent = state.error ? `Cannot load the cats: ${state.error}` : !state.loaded ? 'Loading the cats…' : paused ? 'The cats are taking a break.' : state.active
           ? 'The cats are here. Everything underneath them stays clickable.'
           : 'Cats appear with a mouse or trackpad in a window at least 1024px wide, with reduced motion turned off.';
       }
@@ -53,6 +55,7 @@
       matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', describe);
       document.addEventListener('visibilitychange', describe);
       describe();
+      cats.ready.then(describe, describe);
     </script>
   </body>
 </html>

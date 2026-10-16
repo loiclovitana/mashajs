@@ -1,4 +1,4 @@
-// Behaviour and artwork selection. Edit appearance in artwork/<sprite>/*.svg.
+// Behaviour and sprite-sheet selection.
 export const ourCats = [
   {
     name: 'Calico',

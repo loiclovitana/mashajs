@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <title>Calico · reaching-paw</title>
-  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
-  <g id="reaching-paw">
-    <path d="M 64 47 Q 69 49 72 49 C 82 49 91 51 91 56 C 92 61 87 62 83 60 L 80 59 Q 77 59 69 64 L 68 63 Q 65 66 63 65 L 61 67 L 59 61 Z" fill="#fffdf8" stroke="#6c5b52" stroke-width="0.85"/>
-    <path d="M 84 59 Q 87 60 87 58 Q 89 59 87 60 Z" fill="#efa99a"/>
-    <path d="M 86 56 Q 88 59 86 60 M 89 56 Q 90 58 89 60" fill="none" stroke="#c6b09d" stroke-width="0.65"/>
-  </g>
-</svg>

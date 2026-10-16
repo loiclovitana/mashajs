@@ -8,18 +8,25 @@ from pathlib import Path
 
 class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
+        # Keep HTML, modules, and sprite sheets in sync during local edits.
+        self.send_header('Cache-Control', 'no-store')
         self.send_header('Access-Control-Allow-Origin', '*')
         super().end_headers()
 
 
-root = Path(__file__).resolve().parent.parent
-port = int(os.environ.get('PORT', '8000'))
-server = ThreadingHTTPServer(('127.0.0.1', port), partial(Handler, directory=str(root)))
-print(f'MashaJS workshop: http://localhost:{port}/', flush=True)
-print(f'Moving cats demo: http://localhost:{port}/demo.html', flush=True)
-try:
-    server.serve_forever()
-except KeyboardInterrupt:
-    pass
-finally:
-    server.server_close()
+def main():
+    root = Path(__file__).resolve().parent.parent
+    port = int(os.environ.get('PORT', '8000'))
+    server = ThreadingHTTPServer(('127.0.0.1', port), partial(Handler, directory=str(root)))
+    print(f'MashaJS frame studio: http://localhost:{server.server_port}/', flush=True)
+    print(f'Moving cats demo: http://localhost:{server.server_port}/demo.html', flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+if __name__ == '__main__':
+    main()

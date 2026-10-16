@@ -1,35 +1,51 @@
-import { loadCatalog, loadFrame } from './artwork.js';
+// Sheet contract: four 192px frames per row, in this exact order.
+export const FRAME_SIZE = 192;
+export const FRAME_COUNT = 4;
+export const animations = Object.freeze([
+  { id: 'idle', label: 'Idle', duration: 500 },
+  { id: 'walk-north', label: 'Walk north', duration: 140 },
+  { id: 'walk-east', label: 'Walk east', duration: 140 },
+  { id: 'walk-south', label: 'Walk south', duration: 140 },
+  { id: 'walk-west', label: 'Walk west', duration: 140 },
+  { id: 'groom', label: 'Groom', duration: 400 },
+  { id: 'sleep', label: 'Sleep', duration: 1000 },
+].map((animation, row) => Object.freeze({ ...animation, row })));
 
-// Drawings live in artwork/<cat>/*.svg. This file only plays their poses.
-export function createCatRenderer({ sprite = 'calico' } = {}) {
-  let catalog;
-  let started = false;
-  let lastImage;
-  const animations = new Map();
-  const report = error => console.error(`[Desktop cats: ${sprite}] ${error.message}`);
+export const spriteSheets = Object.freeze({
+  calico: Object.freeze({ name: 'Calico', url: new URL('./assets/calico.webp', import.meta.url).href }),
+  neva: Object.freeze({ name: 'Neva Masquerade', url: new URL('./assets/neva.webp', import.meta.url).href }),
+});
 
-  return (ctx, cat, time, size) => {
-    // Load artwork only when the engine actually draws (never on mobile).
-    if (!started) {
-      started = true;
-      loadCatalog().then(result => {
-        if (!result.cats[sprite]) throw new Error(`Unknown sprite set: ${sprite}`);
-        catalog = result;
-      }).catch(report);
-    }
-    if (!catalog) return;
-    const animation = catalog.cats[sprite].states[cat.state];
-    const frames = animation?.directions[cat.direction];
-    if (!frames) return;
-    const key = `${cat.state}/${cat.direction}`;
-    if (!animations.has(key)) {
-      const entry = { images: null };
-      animations.set(key, entry);
-      Promise.all(frames.map((_, index) => loadFrame(catalog, sprite, cat.state, cat.direction, index)))
-        .then(images => { entry.images = images; }).catch(report);
-    }
-    const images = animations.get(key).images;
-    if (images) lastImage = images[Math.floor(time / animation.duration) % images.length];
-    if (lastImage) ctx.drawImage(lastImage, Math.round(cat.x - size / 2), Math.round(cat.y - size / 2), size, size);
-  };
+const sheets = new Map();
+const byID = new Map(animations.map(animation => [animation.id, animation]));
+
+/** Load once per URL. Custom sheets use the same 4 × 7 layout. */
+export function loadSprite(sprite = 'calico') {
+  const url = spriteSheets[sprite]?.url ?? new URL(sprite, import.meta.url).href;
+  if (!sheets.has(url)) {
+    const image = new Image();
+    image.src = url;
+    const promise = image.decode().then(() => {
+      if (image.naturalWidth !== FRAME_SIZE * FRAME_COUNT || image.naturalHeight !== FRAME_SIZE * animations.length) {
+        throw new Error(`Sprite sheet must be 768 × 1344 pixels: ${url}`);
+      }
+      return image;
+    }).catch(error => {
+      sheets.delete(url); // A failed request must not poison future installations.
+      throw error;
+    });
+    sheets.set(url, promise);
+  }
+  return sheets.get(url);
+}
+
+export function frameAt(animation, elapsed) {
+  return Math.floor(Math.max(0, elapsed) / byID.get(animation).duration) % FRAME_COUNT;
+}
+
+/** Crop and draw a complete frame from the sprite sheet. */
+export function drawFrame(ctx, image, animation, frame, size = ctx.canvas.width) {
+  const { row } = byID.get(animation);
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.drawImage(image, frame * FRAME_SIZE, row * FRAME_SIZE, FRAME_SIZE, FRAME_SIZE, 0, 0, size, size);
 }

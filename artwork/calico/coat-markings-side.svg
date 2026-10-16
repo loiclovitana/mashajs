@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <title>Calico · coat-markings-side</title>
-  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
-  <g id="coat-markings-side">
-    <path d="M 20 47 L 19 50 L 20 50 L 20 53 L 22 52 L 22 56 L 24 55 Q 26 59 30 61 L 29 58 Q 35 62 36 65 L 34 64 L 35 66 Q 31 65 29 64 L 29 65 L 26 63 L 26 64 Q 21 62 20 59 L 19 60 L 18 57 L 17 58 L 17 55 L 16 56 Z" fill="#625650"/>
-    <path d="M 17 56 L 18 55 L 18 59 L 20 58 L 21 62 L 23 61 L 25 65 Q 26 68 23 71 L 21 72 L 21 70 L 18 73 L 18 70 L 16 72 L 16 69 Q 16 74 20 77 Q 16 76 15 72 L 14 70 L 15 67 L 14 68 L 15 63 L 14 64 Z" fill="#e7a45c"/>
-    <path d="M 23 71 Q 23 76 28 77 L 26 74 Q 30 78 34 77 Q 28 80 24 77 Q 21 75 21 72 Z" fill="#f0e1d1"/>
-  </g>
-</svg>

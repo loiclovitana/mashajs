@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <title>Calico · nose-and-mouth</title>
-  <!-- Editable vector artwork; coordinates are shared by the animated poses. -->
-  <g id="nose-and-mouth">
-    <path d="M -2.5 9 Q 0 8 2.5 9 Q 2 10.5 0 12 Q -2 10.5 -2.5 9 Z" fill="#efa99a"/>
-    <path d="M 0 12 L 0 13 Q -2 15 -4 13 M 0 13 Q 2 15 4 13" fill="none" stroke="#b5a08f" stroke-width="0.6"/>
-  </g>
-</svg>

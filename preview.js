@@ -1,20 +1,18 @@
-import { loadCatalog, componentURL, loadFrame } from './artwork.js';
+import { animations, spriteSheets, loadSprite, drawFrame, frameAt, FRAME_COUNT, FRAME_SIZE } from './sprites.js';
 
 const $ = selector => document.querySelector(selector);
-const catSelect = $('#cat');
-const stateSelect = $('#state');
-const viewSelect = $('#view');
 const gallery = $('#gallery');
-const status = $('#status');
+const catSelect = $('#cat');
+const animationSelect = $('#animation');
 const play = $('#play');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let playing = !reduced.matches;
 let previews = [];
 let generation = 0;
 let raf = 0;
-let clock = 0;
-let previousTime = 0;
-let catalog;
+let elapsed = 0;
+let previousTime = null;
+let image;
 
 function element(tag, text, className) {
   const node = document.createElement(tag);
@@ -22,167 +20,106 @@ function element(tag, text, className) {
   if (className) node.className = className;
   return node;
 }
-function sourceLink(cat, id) {
-  const link = element('a', `${id}.svg`, 'source');
-  link.href = componentURL(cat.components[id]);
-  link.target = '_blank';
-  link.rel = 'noopener';
-  return link;
+
+function paint(preview, frame) {
+  drawFrame(preview.canvas.getContext('2d'), image, preview.animation.id, frame);
+  preview.frame = frame;
+  preview.caption.textContent = `Playing · ${frame + 1} / 4`;
 }
-function paint(canvas, image) {
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-}
+
 function tick(time) {
-  if (previousTime) clock += time - previousTime;
+  if (previousTime !== null) elapsed += time - previousTime;
   previousTime = time;
   for (const preview of previews) {
-    const frame = Math.floor(clock / preview.duration) % preview.images.length;
-    if (frame !== preview.frame) {
-      paint(preview.canvas, preview.images[frame]);
-      preview.frame = frame;
-    }
+    const frame = frameAt(preview.animation.id, elapsed + (preview.offset || 0));
+    if (frame !== preview.frame) paint(preview, frame);
   }
   raf = requestAnimationFrame(tick);
 }
+
 function syncPlayback() {
   cancelAnimationFrame(raf);
-  previousTime = 0;
+  previousTime = null;
   play.textContent = playing ? 'Pause animation' : 'Play animation';
   play.setAttribute('aria-pressed', String(!playing));
+  for (const preview of previews) preview.caption.textContent = `${playing ? 'Playing' : 'Paused'} · ${preview.frame + 1} / 4`;
   if (playing && !document.hidden && previews.length) raf = requestAnimationFrame(tick);
+}
+
+function saveControls() {
+  const query = new URLSearchParams({ cat: catSelect.value, animation: animationSelect.value, background: $('#background').value });
+  history.replaceState(null, '', `?${query}`);
+  gallery.dataset.background = $('#background').value;
 }
 
 async function render() {
   const current = ++generation;
   previews = [];
-  clock = 0;
+  elapsed = 0;
   syncPlayback();
+  saveControls();
   gallery.replaceChildren();
   const catID = catSelect.value;
-  const cat = catalog.cats[catID];
-  const parts = viewSelect.value === 'parts';
-  const query = new URLSearchParams({ cat: catID, view: viewSelect.value, state: stateSelect.value, background: $('#background').value });
-  history.replaceState(null, '', `?${query}`);
-  gallery.className = parts ? 'parts' : 'poses';
-  $('#state-control').hidden = parts;
-  play.hidden = parts;
-  $('#hint').textContent = parts
-    ? 'Edit the linked SVG file in a vector or text editor, preserving its artboard and coordinates. Shared parts update every pose that uses them.'
-    : 'Each row shows an animated pose and all its still frames. Expand “Parts used” to find the SVG files that make up that pose. Direction names describe screen coordinates.';
-  status.textContent = 'Loading artwork…';
-  let failed = 0;
-  let count = 0;
-  const tasks = [];
-
-  if (parts) {
-    for (const id of Object.keys(cat.components).sort()) {
-      count++;
+  const cat = spriteSheets[catID];
+  $('#status').textContent = `Loading ${cat.name}…`;
+  $('#sheet').href = cat.url;
+  try {
+    const loaded = await loadSprite(catID);
+    if (current !== generation) return;
+    image = loaded;
+    const selected = animations.filter(animation => animationSelect.value === 'all' || animation.id === animationSelect.value);
+    for (const animation of selected) {
       const card = element('article');
-      card.append(element('h2', id.replaceAll('-', ' ')));
-      const board = element('div', '', 'artboard');
-      const image = new Image();
-      image.alt = `${cat.name}: ${id}`;
-      // A refresh must show saved changes even with an aggressively caching server.
-      const url = new URL(componentURL(cat.components[id]));
-      url.searchParams.set('preview', Date.now());
-      image.src = url.href;
-      board.append(image);
-      card.append(board, sourceLink(cat, id), element('code', `artwork/${cat.components[id].file}`));
-      const uses = Object.values(cat.states).flatMap(state => Object.values(state.directions).flat())
-        .filter(frame => frame.layers.some(layer => layer.component === id)).length;
-      card.append(element('p', `Used in ${uses} frames`, 'meta'));
-      gallery.append(card);
-      tasks.push(image.decode().catch(() => {
-        failed++;
-        card.append(element('p', `Cannot load ${cat.components[id].file}`, 'error'));
-      }));
-    }
-  } else {
-    for (const [state, animation] of Object.entries(cat.states)) {
-      if (stateSelect.value !== 'all' && stateSelect.value !== state) continue;
-      for (const [direction, frames] of Object.entries(animation.directions)) {
-        count++;
-        const card = element('article');
-        card.append(element('h2', `${state[0].toUpperCase() + state.slice(1)} · ${catalog.directions[direction]}`));
-        const strip = element('div', '', 'frames');
-        const canvases = Array.from({ length: frames.length + 1 }, (_, index) => {
-          const figure = element('figure');
-          const board = element('div', '', 'artboard');
-          const canvas = element('canvas');
-          canvas.width = canvas.height = 192;
-          canvas.setAttribute('role', 'img');
-          canvas.setAttribute('aria-label', `${cat.name}, ${state}, ${direction}, ${index ? `frame ${index}` : 'animated preview'}`);
-          board.append(canvas);
-          figure.append(board, element('figcaption', index ? `Frame ${index}` : `${animation.duration} ms/frame`));
-          strip.append(figure);
-          return canvas;
-        });
-        card.append(strip);
-        const details = element('details');
-        details.append(element('summary', 'Parts used'));
-        const list = element('ul');
-        for (const id of new Set(frames.flatMap(frame => frame.layers.map(layer => layer.component)))) {
-          const item = element('li');
-          item.append(sourceLink(cat, id));
-          list.append(item);
+      card.dataset.animation = animation.id;
+      const heading = element('div', '', 'card-heading');
+      heading.append(element('h3', animation.label), element('span', `${String(animation.row + 1).padStart(2, '0')} / 07`));
+      card.append(heading);
+      const strip = element('div', '', 'frames');
+      for (let index = -1; index < FRAME_COUNT; index++) {
+        const figure = element('figure', '', index === -1 ? 'animated' : 'still');
+        const board = element('div', '', 'artboard');
+        const canvas = element('canvas');
+        canvas.width = canvas.height = FRAME_SIZE;
+        canvas.setAttribute('role', 'img');
+        canvas.setAttribute('aria-label', `${cat.name}, ${animation.label}, ${index < 0 ? 'animation' : `frame ${index + 1}`}`);
+        drawFrame(canvas.getContext('2d'), image, animation.id, Math.max(0, index));
+        board.append(canvas);
+        const caption = element('figcaption', index < 0 ? 'Playing · 1 / 4' : `Frame ${index + 1}`);
+        figure.append(board, caption);
+        if (index < 0) {
+          previews.push({ canvas, caption, animation, frame: 0 });
         }
-        details.append(list);
-        card.append(details);
-        gallery.append(card);
-        tasks.push(Promise.all(frames.map((_, index) => loadFrame(catalog, catID, state, direction, index)))
-          .then(images => {
-            if (current !== generation) return;
-            images.forEach((image, index) => paint(canvases[index + 1], image));
-            paint(canvases[0], images[0]);
-            previews.push({ canvas: canvases[0], images, duration: animation.duration, frame: 0 });
-          }).catch(error => {
-            failed++;
-            card.append(element('p', error.message, 'error'));
-          }));
+        strip.append(figure);
       }
+      card.append(strip, element('p', `${animation.duration} ms per frame · ${(animation.duration * 4 / 1000).toFixed(2)} s loop`, 'meta'));
+      gallery.append(card);
     }
-  }
-  await Promise.all(tasks);
-  if (current !== generation) return;
-  status.textContent = `${cat.name} · ${count} ${parts ? 'editable parts' : 'poses'}${failed ? ` · ${failed} could not be loaded (see cards below)` : ' · All loaded'}`;
-  syncPlayback();
-}
-function populateStates() {
-  stateSelect.replaceChildren(new Option('Every animation', 'all'));
-  for (const state of Object.keys(catalog.cats[catSelect.value].states)) {
-    stateSelect.add(new Option(state[0].toUpperCase() + state.slice(1), state));
+    $('#status').textContent = `${cat.name} · ${selected.length} animations · ${selected.length * FRAME_COUNT} complete frames`;
+    syncPlayback();
+  } catch (error) {
+    if (current === generation) $('#status').textContent = `Unable to load the sprite sheet: ${error.message}`;
   }
 }
 
-$('#reload').addEventListener('click', () => location.reload());
-$('#background').addEventListener('change', event => {
-  gallery.dataset.background = event.target.value;
-  const url = new URL(location.href);
-  url.searchParams.set('background', event.target.value);
-  history.replaceState(null, '', url);
-});
+for (const [id, cat] of Object.entries(spriteSheets)) catSelect.add(new Option(cat.name, id));
+for (const animation of animations) animationSelect.add(new Option(animation.label, animation.id));
+const saved = new URLSearchParams(location.search);
+if (Object.hasOwn(spriteSheets, saved.get('cat'))) catSelect.value = saved.get('cat');
+if (animations.some(animation => animation.id === saved.get('animation'))) animationSelect.value = saved.get('animation');
+if (['checker', 'light', 'dark'].includes(saved.get('background'))) $('#background').value = saved.get('background');
+
 play.addEventListener('click', () => { playing = !playing; syncPlayback(); });
-catSelect.addEventListener('change', () => { populateStates(); render(); });
-stateSelect.addEventListener('change', render);
-viewSelect.addEventListener('change', render);
+$('#step').addEventListener('click', () => {
+  playing = false;
+  for (const preview of previews) paint(preview, (preview.frame + 1) % FRAME_COUNT);
+  // Resume smoothly from the selected frame, even when rows have different timings.
+  for (const preview of previews) preview.offset = preview.frame * preview.animation.duration - elapsed;
+  syncPlayback();
+});
+catSelect.addEventListener('change', render);
+animationSelect.addEventListener('change', render);
+$('#background').addEventListener('change', saveControls);
 $('.controls').addEventListener('submit', event => event.preventDefault());
 document.addEventListener('visibilitychange', syncPlayback);
 reduced.addEventListener('change', () => { playing = !reduced.matches; syncPlayback(); });
-
-try {
-  catalog = await loadCatalog();
-  for (const [id, cat] of Object.entries(catalog.cats)) catSelect.add(new Option(cat.name, id));
-  const saved = new URLSearchParams(location.search);
-  if (catalog.cats[saved.get('cat')]) catSelect.value = saved.get('cat');
-  if (['parts', 'poses'].includes(saved.get('view'))) viewSelect.value = saved.get('view');
-  populateStates();
-  if (catalog.cats[catSelect.value].states[saved.get('state')]) stateSelect.value = saved.get('state');
-  if (['checker', 'light', 'dark'].includes(saved.get('background'))) $('#background').value = saved.get('background');
-  gallery.dataset.background = $('#background').value;
-  await render();
-} catch (error) {
-  status.textContent = `Cannot open the artwork gallery: ${error.message}`;
-  status.classList.add('error');
-}
+await render();
