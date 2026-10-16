@@ -1,40 +1,8 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   width="96"
-   height="96"
-   viewBox="0 0 96 96"
-   fill="none"
-   stroke-linecap="round"
-   stroke-linejoin="round"
-   version="1.1"
-   id="svg2"
-   sodipodi:docname="coat-markings-front.svg"
-   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs2" />
-  <sodipodi:namedview
-     id="namedview2"
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4.6770833"
-     inkscape:cx="48"
-     inkscape:cy="47.893096"
-     inkscape:window-width="1266"
-     inkscape:window-height="690"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
-  <title
-     id="title1">Neva Masquerade · coat-markings-front</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Neva Masquerade · coat-markings-front</title>
+  <!-- Editable source component. Coordinates are shared by all animation poses. -->
+  <g id="coat-markings-front">
+    <path d="M 31 55 Q 29 63 34 68 L 32 64 L 36 66 L 35 61 L 39 64 L 36 56 Z" fill="#eee3d6" />
+    <path d="M 63 55 Q 68 62 63 69 L 64 64 L 60 68 L 61 61 L 57 64 L 60 56 Z" fill="#eee3d6" />
+  </g>
 </svg>

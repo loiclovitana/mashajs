@@ -1,8 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <title>Neva Masquerade · front-paws-step-left</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <!-- Editable source component. Coordinates are shared by all animation poses. -->
   <g id="front-paws-step-left">
-    <ellipse cx="36" cy="80" rx="7" ry="4.5" fill="#fffdf8" stroke="#9b8f86" stroke-width="1.3" />
-    <ellipse cx="62" cy="80" rx="7" ry="4.5" fill="#fffdf8" stroke="#9b8f86" stroke-width="1.3" />
+    <path d="M 30 81 Q 29.7 76.5 36 76.5 Q 42.3 76.5 42 81 Q 42 85.5 36 85.5 Q 30 85.5 30 81 Z" fill="#fcf9f4" stroke="#71645c" stroke-width="0.8" />
+    <path d="M 33.8 82 Q 33.3 84 34 85.2 M 38.2 82 Q 38.7 84 38 85.2" fill="none" stroke="#c5b7a8" stroke-width="0.55" />
+    <path d="M 56 81 Q 55.7 76.5 62 76.5 Q 68.3 76.5 68 81 Q 68 85.5 62 85.5 Q 56 85.5 56 81 Z" fill="#fcf9f4" stroke="#71645c" stroke-width="0.8" />
+    <path d="M 59.8 82 Q 59.3 84 60 85.2 M 64.2 82 Q 64.7 84 64 85.2" fill="none" stroke="#c5b7a8" stroke-width="0.55" />
   </g>
 </svg>

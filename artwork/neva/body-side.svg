@@ -1,7 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <title>Neva Masquerade · body-side</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <defs>
+    <linearGradient id="neva-body-side" x1="0" y1="0" x2="0.8" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f3e9dd" />
+      <stop offset="1" stop-color="#d5c5b6" />
+    </linearGradient>
+  </defs>
   <g id="body-side">
-    <ellipse cx="44" cy="64" rx="24" ry="16" fill="#fffaf2" stroke="#9b8f86" stroke-width="1.3" />
+    <path d="M 21 56 Q 28 46 45 48 Q 59 47 66 56 L 70 60 L 67 60 Q 72 66 69 72 L 67 70 Q 66 81 53 81 L 49 83 L 45 81 Q 30 84 23 77 L 20 78 L 21 74 Q 16 69 18 63 L 16 64 Z" fill="url(#neva-body-side)" stroke="#71645c" stroke-width="0.85" />
+    <path d="M 24 57 Q 29 52 35 53 L 32 56 L 39 55 Q 33 59 29 61 L 30 58 Z M 23 64 Q 29 60 34 61 L 29 64 L 33 64 L 25 69 Z" fill="#bcad9e" />
+    <path d="M 39 61 Q 48 57 60 61 L 66 66 L 61 65 L 64 71 L 60 70 L 59 78 L 56 76 L 52 81 L 50 77 L 45 80 L 42 76 L 37 78 L 38 73 L 34 74 Z" fill="#fcf9f4" />
   </g>
 </svg>

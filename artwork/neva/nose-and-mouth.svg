@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="-48 -48 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <title>Neva Masquerade · nose-and-mouth</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <!-- Editable source component. Coordinates are shared by all animation poses. -->
   <g id="nose-and-mouth">
-    <path d="M -3 9 Q 0 7 3 9 L 0 12 Z" fill="#cd9d9a" />
-    <path d="M 0 12 L 0 14 M -3 15 Q 0 17 3 15" fill="none" stroke="#95827e" stroke-width="0.9" />
+    <path d="M -2.9 8 Q -2.9 6.8 0 6.8 Q 2.9 6.8 2.9 8 Q 2.8 8.8 1.2 9.5 Q .8 10.8 0 10.8 Q -.8 10.8 -1.2 9.5 Q -2.8 8.8 -2.9 8 Z" fill="#edb4b3" />
+    <path d="M -2 7.6 Q 0 7.1 1.8 7.7" fill="none" stroke="#f3c4bf" stroke-width="0.45" />
+    <path d="M 0 10.9 Q -.2 13.6 -2.8 13.6 Q -4.5 13.6 -4.9 12.2 M 0 10.9 Q .2 13.6 2.8 13.6 Q 4.5 13.6 4.9 12.2" fill="none" stroke="#71645c" stroke-width="0.65" />
   </g>
 </svg>

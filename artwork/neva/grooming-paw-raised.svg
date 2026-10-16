@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <title>Neva Masquerade · grooming-paw-raised</title>
-  <!-- Editable source component. Keep coordinates fixed: poses position this artwork. -->
+  <!-- Editable source component. Coordinates are shared by all animation poses. -->
   <g id="grooming-paw-raised">
-    <ellipse cx="59" cy="58" rx="5" ry="9" fill="#fffdf8" stroke="#9b8f86" stroke-width="1.3" />
-    <ellipse cx="55" cy="53" rx="2" ry="3" fill="#cd9d9a" />
+    <path d="M 54 64 Q 51 59 53 54 L 52 53 L 54 53 Q 54 48 58 48 Q 64 48 64 54 Q 66 60 62 66 Z" fill="#fcf9f4" stroke="#71645c" stroke-width="0.85" />
+    <path d="M 56 51 L 56 54 M 59 50 L 59 53" fill="none" stroke="#c5b7a8" stroke-width="0.55" />
+    <ellipse cx="57.5" cy="58" rx="2.2" ry="2.7" fill="#edb4b3" />
   </g>
 </svg>
