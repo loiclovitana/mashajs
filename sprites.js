@@ -14,6 +14,7 @@ export const animations = Object.freeze([
 export const spriteSheets = Object.freeze({
   calico: Object.freeze({ name: 'Calico', url: new URL('./assets/calico.webp', import.meta.url).href }),
   neva: Object.freeze({ name: 'Neva Masquerade', url: new URL('./assets/neva.webp', import.meta.url).href }),
+  calico2: Object.freeze({ name: 'Opale', url: new URL('./assets/calico2.webp', import.meta.url).href }),
 });
 
 const sheets = new Map();
