@@ -1,31 +1,5 @@
-#!/usr/bin/env python3
-"""Serve the preview and allow local websites to load the library across origins."""
-from functools import partial
-from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-import os
-from pathlib import Path
-
-
-class Handler(SimpleHTTPRequestHandler):
-    def end_headers(self):
-        # Keep HTML, modules, and sprite sheets in sync during local edits.
-        self.send_header('Cache-Control', 'no-store')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        super().end_headers()
-
-
-def main():
-    root = Path(__file__).resolve().parent.parent
-    port = int(os.environ.get('PORT', '8000'))
-    server = ThreadingHTTPServer(('127.0.0.1', port), partial(Handler, directory=str(root)))
-    print(f'masha.js preview: http://localhost:{server.server_port}/preview/', flush=True)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.server_close()
-
-
-if __name__ == '__main__':
-    main()
+#!/bin/sh
+# Build and serve the same artifact that is published to GitHub Pages.
+set -eu
+cd "$(dirname "$0")/.."
+exec npm start

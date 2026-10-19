@@ -1,0 +1,6 @@
+#!/bin/sh
+# Format the project and apply automatic ESLint fixes from any working directory.
+set -eu
+cd "$(dirname "$0")/.."
+npm run format
+exec npm run lint:fix
