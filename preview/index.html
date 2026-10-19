@@ -6,41 +6,61 @@
     <meta name="theme-color" content="#f8f7f4" />
     <link rel="icon" href="data:," />
     <title>masha.js</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
     <link rel="stylesheet" href="preview.css" />
   </head>
   <body>
-    <header><h1>masha.js</h1></header>
+    <header>
+      <h1>masha.js</h1>
+      <p>A little company for your website.</p>
+    </header>
     <main>
-      <section aria-labelledby="current-heading">
+      <article id="embed" aria-labelledby="embed-heading">
+        <h2 id="embed-heading" tabindex="-1">
+          <span aria-hidden="true">🌐</span> Add to your website
+        </h2>
+        <button id="copy-code" type="button">Copy code</button>
+        <span id="copy-status" role="status"></span>
+        <pre tabindex="0" aria-label="Website installation code"><code id="embed-code"></code></pre>
+      </article>
+      <hr />
+      <article aria-labelledby="current-heading">
         <div class="section-heading">
-          <h2 id="current-heading">Current cats</h2>
-          <label class="preview-switch"
-            >Preview <input id="preview-enabled" type="checkbox" role="switch" checked /><span
-              id="preview-state"
-              >On</span
-            ></label
-          >
+          <h2 id="current-heading" tabindex="-1"><span aria-hidden="true">⚙️</span> Settings</h2>
+          <label class="preview-toggle">
+            <input id="preview-enabled" type="checkbox" aria-label="Preview" checked />
+            Live preview <span id="preview-state">On</span>
+          </label>
         </div>
-        <p id="live-status" class="note" role="status"></p>
-        <div id="current-cats"></div>
-        <form id="add-cat" class="add-cat">
-          <label>Cat<select id="new-cat"></select></label>
+        <p id="live-status" role="status"></p>
+        <form id="cat-settings" class="controls" aria-label="Cat settings">
+          <label
+            >Cat size (px)<input id="cat-size" type="number" min="16" value="120" required
+          /></label>
+          <label
+            >Minimum screen width (px)<input
+              id="min-width"
+              type="number"
+              min="0"
+              value="1024"
+              required
+          /></label>
+          <label
+            >Layer order (z-index)<input id="z-index" type="number" value="900" required
+          /></label>
+        </form>
+        <section id="current-cats" aria-labelledby="current-heading"></section>
+        <form id="add-cat">
+          <label>Choose a cat<select id="new-cat"></select></label>
           <button type="submit">Add cat</button>
         </form>
-      </section>
-      <section id="embed" aria-labelledby="embed-heading">
-        <h2 id="embed-heading">Add to your website</h2>
-        <p>
-          Paste this before <code>&lt;/body&gt;</code>. It includes your current cats and their
-          behaviors.
-        </p>
-        <pre><code id="embed-code"></code></pre>
-      </section>
-      <section aria-labelledby="studio-heading">
-        <div class="section-heading">
-          <h2 id="studio-heading">The frame studio</h2>
-          <span>07 animations · 04 frames each</span>
-        </div>
+      </article>
+      <hr />
+      <article aria-labelledby="studio-heading">
+        <h2 id="studio-heading" tabindex="-1">
+          <span aria-hidden="true">🎞️</span> The frame studio
+        </h2>
+        <p>Meet every move. Expand an animation to inspect its four frames.</p>
         <form class="controls" aria-label="Frame studio controls">
           <label>Companion<select id="cat"></select></label>
           <label
@@ -50,13 +70,14 @@
               <option value="dark">Midnight</option>
             </select></label
           >
+          <button id="playback" type="button">Pause animations</button>
           <a id="sheet" href="../lib/assets/opale.webp" target="_blank" rel="noopener"
             >Open sprite sheet ↗</a
           >
         </form>
         <p id="status" role="status">Loading the cats…</p>
-        <div id="gallery" aria-label="Animation previews"></div>
-      </section>
+        <section id="gallery" aria-label="Animation previews"></section>
+      </article>
       <noscript>Enable JavaScript to configure the cats and view their animations.</noscript>
     </main>
     <script type="module" src="current-cats.js"></script>

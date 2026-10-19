@@ -41,7 +41,9 @@ updated static files. The server disables browser caching and allows cross-origi
 module imports for testing embeds from another local website.
 
 Toggle live cats on or off, add or remove cats, and choose Chaser or Wanderer.
-The installation snippet updates to match your configuration. The frame studio
+Adjust cat size, minimum screen width, layer order, and each cat's movement speed.
+Leave speed empty to use the behavior's default. The live preview and installation
+snippet update to match your configuration. The frame studio
 shows all seven animations with cat selection and light/dark/transparency
 backgrounds. It works on mobile and starts paused for reduced motion.
 

@@ -17,9 +17,11 @@ test('the Pages root redirects to a working preview under the repository prefix'
   await expect(page).toHaveURL(/\/mashajs\/preview\//);
   await expect(page.locator('#status')).toContainText('28 complete frames');
   await expect(page.locator('#gallery canvas')).toHaveCount(35);
+  await expect(page.locator('#current-cats canvas')).toHaveCount(2);
   await expect(page.locator('[data-desktop-cats] canvas')).toHaveCount(2);
   await expect(page.locator('#live-status')).toContainText('Chasers follow your cursor');
-  await page.selectOption('#cat', 'masha');
+  await page.locator('#current-cats').getByRole('link', { name: 'Masha', exact: true }).click();
+  await expect(page.locator('#cat')).toHaveValue('masha');
   await expect(page.locator('#status')).toContainText('Masha · 7 animations');
   await expect(page.locator('#sheet')).toHaveAttribute(
     'href',
@@ -42,6 +44,7 @@ test('live controls add, remove, change behavior, and update the installation sn
   await expect(page.locator('#embed-code')).toContainText('personality: "wanderer"');
   await page.selectOption('#new-cat', 'masha');
   await page.getByRole('button', { name: 'Add cat', exact: true }).click();
+  await expect(page.locator('#cat')).toHaveValue('masha');
   await expect(page.locator('[data-desktop-cats] canvas')).toHaveCount(3);
   await page.uncheck('#preview-enabled');
   await expect(page.locator('[data-desktop-cats]')).toHaveCount(0);
@@ -54,6 +57,79 @@ test('live controls add, remove, change behavior, and update the installation sn
   }
   await expect(page.locator('#live-status')).toHaveText('Add a cat to preview it here.');
   await expect(page.locator('#embed-code')).toContainText('cats: []');
+});
+
+test('creation settings update the live cats and installation code', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto('preview/');
+  const overlay = page.locator('[data-desktop-cats]');
+  const canvas = overlay.locator('canvas').first();
+  const code = page.locator('#embed-code');
+  await expect(canvas).toHaveCSS('width', '120px');
+  await expect(code).toContainText('size: 120');
+
+  await page.getByLabel('Cat size (px)', { exact: true }).fill('160');
+  await page.getByLabel('Layer order (z-index)', { exact: true }).fill('1200');
+  await page.getByLabel('Minimum screen width (px)', { exact: true }).fill('1600');
+  await page.getByLabel('Minimum screen width (px)', { exact: true }).press('Tab');
+  await expect(canvas).toHaveCSS('width', '160px');
+  await expect(canvas).toHaveCSS('height', '160px');
+  await expect(overlay).toHaveCSS('z-index', '1200');
+  await expect(overlay).toBeHidden();
+  await expect(page.locator('#live-status')).toContainText('at least 1600px');
+  await expect(code).toContainText('size: 160');
+  await expect(code).toContainText('minWidth: 1600');
+  await expect(code).toContainText('zIndex: 1200');
+
+  await page.setViewportSize({ width: 1700, height: 1000 });
+  await expect(overlay).toBeVisible();
+  await expect(page.locator('#live-status')).toContainText('Chasers follow your cursor');
+
+  const speed = page.getByLabel('Opale speed (px/s)', { exact: true });
+  await speed.fill('75');
+  await speed.press('Tab');
+  await expect(code).toContainText('personality: "chaser", speed: 75');
+  await expect(overlay.locator('canvas')).toHaveCount(2);
+  await speed.fill('0');
+  await speed.press('Tab');
+  await expect(code).toContainText('speed: 75');
+  await speed.fill('');
+  await speed.press('Tab');
+  await expect(code).not.toContainText('speed:');
+  await page.locator('#current-cats select').first().selectOption('wanderer');
+  await expect(speed).toHaveAttribute('placeholder', '55');
+
+  await page.getByLabel('Cat size (px)', { exact: true }).fill('8');
+  await page.getByLabel('Cat size (px)', { exact: true }).press('Tab');
+  await expect(canvas).toHaveCSS('width', '160px');
+  await expect(code).toContainText('size: 160');
+  expect(errors).toEqual([]);
+});
+
+test('the installation code copies the current configuration and offers a manual fallback', async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('preview/');
+  await page.locator('#current-cats select').first().selectOption('wanderer');
+  await page.getByRole('button', { name: 'Copy code', exact: true }).click();
+  await expect(page.locator('#copy-status')).toHaveText('Copied!');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    await page.locator('#embed-code').textContent(),
+  );
+
+  await context.clearPermissions();
+  await context.grantPermissions(['clipboard-read']);
+  await page.evaluate(() => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined });
+  });
+  await page.getByRole('button', { name: 'Copy code', exact: true }).click();
+  await expect(page.locator('#copy-status')).toHaveText('Select and copy the code below.');
+  expect(await page.evaluate(() => window.getSelection().toString())).toBe(
+    await page.locator('#embed-code').textContent(),
+  );
 });
 
 test('one-tag installation works from another origin and preserves pointer interaction', async ({
@@ -247,6 +323,41 @@ test('mobile preview remains usable with live cats disabled', async ({ browser }
   await expect(page.locator('#gallery canvas')).toHaveCount(35);
   await expect(page.locator('[data-desktop-cats]')).toBeHidden();
   await expect(page.locator('#gallery .animated figcaption').first()).toContainText('Paused');
+  await expect(page.getByRole('button', { name: 'Play animations', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Play animations', exact: true }).click();
+  await expect(page.locator('#gallery .animated figcaption').first()).toContainText('Playing');
+  await page.getByRole('button', { name: 'Pause animations', exact: true }).click();
+  const pausedCaption = await page.locator('#gallery .animated figcaption').first().textContent();
+  await page.waitForTimeout(650);
+  await expect(page.locator('#gallery .animated figcaption').first()).toHaveText(pausedCaption);
+  const frames = page.locator('#gallery details').first();
+  await expect(frames.locator('canvas').first()).toBeHidden();
+  await frames.getByText('Show all 4 frames', { exact: true }).click();
+  await expect(frames.locator('canvas')).toHaveCount(4);
+  await expect(frames.locator('canvas').last()).toBeVisible();
   await expect(page.locator('#cat')).toHaveValue('opale');
+  await page.selectOption('#background', 'dark');
+  expect(
+    await page
+      .locator('#gallery canvas')
+      .first()
+      .evaluate((canvas) => {
+        return [...canvas.getContext('2d').getImageData(0, 0, 1, 1).data];
+      }),
+  ).toEqual([46, 54, 51, 255]);
+  for (const width of [320, 390, 768]) {
+    await page.setViewportSize({ width, height: 844 });
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
+    for (const control of await page
+      .locator('select, input[type="number"], button, summary')
+      .all()) {
+      const box = await control.boundingBox();
+      expect(box.x).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+    }
+  }
   await context.close();
 });
