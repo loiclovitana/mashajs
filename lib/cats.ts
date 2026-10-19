@@ -100,7 +100,7 @@ export function createCats({
     });
     overlay.append(canvas);
     return {
-      name: config.name || `Cat ${index + 1}`,
+      name: `Cat ${index + 1}`,
       personality: config.personality === 'wanderer' ? 'wanderer' : 'chaser',
       speed:
         typeof config.speed === 'number' && Number.isFinite(config.speed) && config.speed > 0

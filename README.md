@@ -113,8 +113,8 @@ Use this instead of `auto.js` when you want your own configuration:
     minWidth: 1024,
     zIndex: 900,
     cats: [
-      { name: 'Opale', sprite: 'opale', personality: 'chaser', speed: 150 },
-      { name: 'Masha', sprite: 'masha', personality: 'wanderer', speed: 55 },
+      { sprite: 'opale', personality: 'chaser', speed: 150 },
+      { sprite: 'masha', personality: 'wanderer', speed: 55 },
     ],
   });
 
@@ -153,7 +153,7 @@ entry point exports `CatConfig`, `CatsOptions`, `CatsController`, `CatState`,
 import { createCats, type CatsOptions } from './mashajs/cats.js';
 
 const options = {
-  cats: [{ name: 'Opale', sprite: 'opale', personality: 'chaser' }],
+  cats: [{ sprite: 'opale', personality: 'chaser' }],
 } satisfies CatsOptions;
 
 const cats = createCats(options);

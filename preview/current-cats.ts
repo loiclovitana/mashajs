@@ -24,8 +24,9 @@ const settings = {
   minWidth: minWidth.valueAsNumber,
   zIndex: zIndex.valueAsNumber,
 };
-const cats: { name: string; sprite: BuiltinSprite; personality: Personality; speed?: number }[] =
-  ourCats.map((cat) => ({ ...cat, name: spriteSheets[cat.sprite].name.trim() }));
+const cats: { sprite: BuiltinSprite; personality: Personality; speed?: number }[] = ourCats.map(
+  (cat) => ({ ...cat }),
+);
 let companions: CatsController | null = null;
 let desktop = matchMedia(
   `(min-width: ${settings.minWidth}px) and (hover: hover) and (pointer: fine)`,
@@ -69,7 +70,7 @@ function updateEmbed() {
   const configuration = cats
     .map(
       (cat) =>
-        `      { name: ${JSON.stringify(cat.name)}, sprite: ${JSON.stringify(cat.sprite)}, personality: ${JSON.stringify(cat.personality)}${cat.speed === undefined ? '' : `, speed: ${cat.speed}`} }`,
+        `      { sprite: ${JSON.stringify(cat.sprite)}, personality: ${JSON.stringify(cat.personality)}${cat.speed === undefined ? '' : `, speed: ${cat.speed}`} }`,
     )
     .join(',\n');
   embedCode.textContent = `<script type="module">
@@ -97,6 +98,7 @@ function renderCats(focusIndex: number | null = null) {
     list.append(empty);
   }
   cats.forEach((cat, index) => {
+    const catName = spriteSheets[cat.sprite].name.trim();
     const row = document.createElement('aside');
     row.className = 'cat-row';
     const name = document.createElement('h3');
@@ -115,12 +117,12 @@ function renderCats(focusIndex: number | null = null) {
       (image) => drawFrame(context, image, 'idle', 0),
       () => {}, // The live preview reports sprite loading errors.
     );
-    preview.append(canvas, cat.name);
+    preview.append(canvas, catName);
     name.append(preview);
     const label = document.createElement('label');
     label.textContent = 'Behavior';
     const behavior = document.createElement('select');
-    behavior.setAttribute('aria-label', `${cat.name} behavior`);
+    behavior.setAttribute('aria-label', `${catName} behavior`);
     behavior.add(new Option('Chaser', 'chaser'));
     behavior.add(new Option('Wanderer', 'wanderer'));
     behavior.value = cat.personality;
@@ -137,7 +139,7 @@ function renderCats(focusIndex: number | null = null) {
     speed.type = 'number';
     speed.min = '0';
     speed.step = 'any';
-    speed.setAttribute('aria-label', `${cat.name} speed (px/s)`);
+    speed.setAttribute('aria-label', `${catName} speed (px/s)`);
     speed.placeholder = cat.personality === 'chaser' ? '150' : '55';
     speed.title = 'Leave empty to use the default speed for this behavior.';
     speed.value = cat.speed === undefined ? '' : String(cat.speed);
@@ -155,7 +157,7 @@ function renderCats(focusIndex: number | null = null) {
     const remove = document.createElement('button');
     remove.type = 'button';
     remove.textContent = 'Remove';
-    remove.setAttribute('aria-label', `Remove ${cat.name}`);
+    remove.setAttribute('aria-label', `Remove ${catName}`);
     remove.addEventListener('click', () => {
       cats.splice(index, 1);
       renderCats(Math.min(index, cats.length - 1));
@@ -175,7 +177,7 @@ addCatForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const sprite = choice.value;
   if (!isBuiltinSprite(sprite)) return;
-  cats.push({ name: spriteSheets[sprite].name, sprite, personality: 'wanderer' });
+  cats.push({ sprite, personality: 'wanderer' });
   renderCats(cats.length - 1);
   updateEmbed();
   updatePreview();

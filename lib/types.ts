@@ -3,7 +3,6 @@ import type { AnimationId } from './sprites.js';
 export type Personality = 'chaser' | 'wanderer';
 
 export interface CatConfig {
-  name?: string;
   /** A built-in sprite name, a URL string, or a URL relative to your own module. */
   sprite?: string | URL;
   personality?: Personality;
