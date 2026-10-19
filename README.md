@@ -6,6 +6,10 @@ Two animated cats for any website. Seven animations, four complete frames each:
 Plain JavaScript ES modules. No framework, runtime dependencies, npm installation,
 or JavaScript build step. The preview and embedded cats use the same sprite sheets.
 
+`lib/` is the standalone JavaScript module, including its runtime artwork.
+`preview/` is a separate site that imports the module to show the frame studio
+and live cat controls. The library has no dependency on the preview site.
+
 ## Preview
 
 ```sh
@@ -13,10 +17,11 @@ or JavaScript build step. The preview and embedded cats use the same sprite shee
 # Optional: PORT=8080 ./bin/start
 ```
 
-Requires Python 3. Open <http://localhost:8000/> for the frame studio, or
-<http://localhost:8000/demo.html> to watch the cats roam. The studio supports cat
-and animation selection, light/dark/transparency backgrounds, pause, and stepping
-through frames.
+Requires Python 3. Open <http://localhost:8000/preview/>. The root URL redirects
+there too. Toggle the live preview on or off, add or remove cats, and choose
+Chaser or Wanderer for each cat. The installation snippet updates to match your
+current configuration. The frame studio shows all seven animations with cat
+selection and light/dark/transparency backgrounds.
 Use HTTP, rather than opening HTML files with `file://`.
 
 The local server disables browser caching to keep the page and its modules in
@@ -26,8 +31,9 @@ the page once (`Ctrl+Shift+R` in Firefox) to clear the previously cached files.
 
 ## Add cats to a website
 
-Copy `cats.js`, `sprites.js`, `our-cats.js`, `auto.js`, and `assets/` into a
-`mashajs/` directory on your site, keeping that structure. Then add:
+Copy the contents of `lib/` into a `mashajs/` directory on your site, keeping
+`assets/` alongside the JavaScript files. Include `LICENSE` when distributing
+the module. Then add:
 
 ```html
 <script type="module" src="/mashajs/auto.js"></script>
@@ -42,12 +48,14 @@ After publishing this project to GitHub Pages, the same installation works acros
 websites with this URL:
 
 ```html
-<script type="module" src="https://loiclovitana.github.io/mashajs/auto.js"></script>
+<script type="module" src="https://loiclovitana.github.io/mashajs/lib/auto.js"></script>
 ```
 
 Module imports and image URLs resolve relative to the library, so nested pages
 and installations on other origins work. The JavaScript host must allow CORS.
 `./bin/start` includes CORS headers for testing from another local website.
+For that local server, the module entry point is
+`http://localhost:8000/lib/auto.js`.
 For a CSP, allow the library's origin in `script-src` and `img-src`; the renderer
 also sets inline element styles, which your style policy must permit.
 No `blob:` images or artwork fetches are needed.
@@ -65,8 +73,8 @@ Use this instead of `auto.js` when you want your own configuration:
     minWidth: 1024,
     zIndex: 900,
     cats: [
-      { name: 'Calico', sprite: 'calico', personality: 'chaser', speed: 150 },
-      { name: 'Neva', sprite: 'neva', personality: 'wanderer', speed: 55 },
+      { name: 'Opale', sprite: 'opale', personality: 'chaser', speed: 150 },
+      { name: 'Masha', sprite: 'masha', personality: 'wanderer', speed: 55 },
     ],
   });
 
@@ -130,7 +138,7 @@ North has a rear view, south has a front view, and east/west have side views.
 
 ### Edit a sprite sheet
 
-Open `assets/calico.webp` or `assets/neva.webp` in an image editor. Keep the
+Open `lib/assets/opale.webp` or `lib/assets/masha.webp` in an image editor. Keep the
 transparent background, 768 × 1344 dimensions, row order, and four frames per row,
 then save as lossless WebP and refresh the preview.
 
@@ -147,38 +155,39 @@ object when the custom asset belongs to the consuming site.
 ## Files
 
 ```text
-assets/              Two packed WebP sheets; used at runtime
-sprites.js           Sheet layout, cached loading, frame drawing
-cats.js              Movement and lifecycle
-our-cats.js          Default names, personalities, and sprite choices
-auto.js              One-tag installation
-index.html           Frame studio
-preview.js / .css     Studio playback and styling
-demo.html            Moving cats and pause/resume controls
-bin/start            Local preview server
-tests/browser.py     Browser regression checks
+lib/                 Standalone module; copy its contents to embed the cats
+  assets/            Two packed WebP sheets; used at runtime
+  sprites.js         Sheet layout, cached loading, frame drawing
+  cats.js            Movement and lifecycle; exports createCats()
+  our-cats.js         Default names, personalities, and sprite choices
+  auto.js            One-tag installation; exports companions
+preview/             Preview site; consumes lib/ through relative imports
+  index.html         Single-page preview, installation snippet, and frame studio
+  current-cats.js     Live cat configuration and matching installation snippet
+  preview.js         Frame studio rendering
+  preview.css        Preview site styling
+bin/start            Local server for the preview and module
+index.html           Redirect to preview/ for static hosting
+LICENSE              Source and artwork licensing
 ```
 
-## Browser checks
-
-The optional test tools are development dependencies only:
-
-```sh
-python3 -m venv .venv
-.venv/bin/pip install playwright
-.venv/bin/playwright install chromium
-.venv/bin/python tests/browser.py
-```
-
-To use an existing Chromium installation, set `CHROMIUM=/path/to/chromium`.
-The tests start their own local server and cover frame rendering and timing,
-preview controls, mobile layout, movement, lifecycle, preferences, image failures,
-and embedding from another origin.
+The server serves the repository root so the preview can import `../lib/`.
+It can be started from any working directory. No bundling or package installation
+is required to develop either part.
 
 ## Publish
 
 Publish from a checkout with the LFS image contents downloaded (`git lfs pull`),
-keeping `assets/` alongside the modules. For GitHub Pages, use a custom GitHub
+keeping `lib/assets/` alongside the modules in `lib/`. Serve the repository root
+to publish both the preview and library: `/` redirects to `/preview/`, and the
+hosted entry points are `/lib/auto.js` and `/lib/cats.js` (under the repository
+prefix when hosted on GitHub Pages). Existing embeds pointing to the old root
+`auto.js` or `cats.js` URLs must be updated to include `lib/`.
+
+To distribute only the library, copy `lib/` and `LICENSE`; the preview site and
+local server are not needed.
+
+For GitHub Pages, use a custom GitHub
 Actions workflow that downloads LFS files before uploading the Pages artifact.
 The built-in **Deploy from a branch** flow does not support
 [Git LFS files](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage).

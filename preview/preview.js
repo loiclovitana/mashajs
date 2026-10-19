@@ -1,10 +1,8 @@
-import { animations, spriteSheets, loadSprite, drawFrame, frameAt, FRAME_COUNT, FRAME_SIZE } from './sprites.js';
+import { animations, spriteSheets, loadSprite, drawFrame, frameAt, FRAME_COUNT, FRAME_SIZE } from '../lib/sprites.js';
 
 const $ = selector => document.querySelector(selector);
 const gallery = $('#gallery');
 const catSelect = $('#cat');
-const animationSelect = $('#animation');
-const play = $('#play');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 let playing = !reduced.matches;
 let previews = [];
@@ -31,7 +29,7 @@ function tick(time) {
   if (previousTime !== null) elapsed += time - previousTime;
   previousTime = time;
   for (const preview of previews) {
-    const frame = frameAt(preview.animation.id, elapsed + (preview.offset || 0));
+    const frame = frameAt(preview.animation.id, elapsed);
     if (frame !== preview.frame) paint(preview, frame);
   }
   raf = requestAnimationFrame(tick);
@@ -40,14 +38,12 @@ function tick(time) {
 function syncPlayback() {
   cancelAnimationFrame(raf);
   previousTime = null;
-  play.textContent = playing ? 'Pause animation' : 'Play animation';
-  play.setAttribute('aria-pressed', String(!playing));
   for (const preview of previews) preview.caption.textContent = `${playing ? 'Playing' : 'Paused'} · ${preview.frame + 1} / 4`;
   if (playing && !document.hidden && previews.length) raf = requestAnimationFrame(tick);
 }
 
 function saveControls() {
-  const query = new URLSearchParams({ cat: catSelect.value, animation: animationSelect.value, background: $('#background').value });
+  const query = new URLSearchParams({ cat: catSelect.value, background: $('#background').value });
   history.replaceState(null, '', `?${query}`);
   gallery.dataset.background = $('#background').value;
 }
@@ -67,8 +63,7 @@ async function render() {
     const loaded = await loadSprite(catID);
     if (current !== generation) return;
     image = loaded;
-    const selected = animations.filter(animation => animationSelect.value === 'all' || animation.id === animationSelect.value);
-    for (const animation of selected) {
+    for (const animation of animations) {
       const card = element('article');
       card.dataset.animation = animation.id;
       const heading = element('div', '', 'card-heading');
@@ -94,7 +89,7 @@ async function render() {
       card.append(strip, element('p', `${animation.duration} ms per frame · ${(animation.duration * 4 / 1000).toFixed(2)} s loop`, 'meta'));
       gallery.append(card);
     }
-    $('#status').textContent = `${cat.name} · ${selected.length} animations · ${selected.length * FRAME_COUNT} complete frames`;
+    $('#status').textContent = `${cat.name} · ${animations.length} animations · ${animations.length * FRAME_COUNT} complete frames`;
     syncPlayback();
   } catch (error) {
     if (current === generation) $('#status').textContent = `Unable to load the sprite sheet: ${error.message}`;
@@ -102,22 +97,11 @@ async function render() {
 }
 
 for (const [id, cat] of Object.entries(spriteSheets)) catSelect.add(new Option(cat.name, id));
-for (const animation of animations) animationSelect.add(new Option(animation.label, animation.id));
 const saved = new URLSearchParams(location.search);
 if (Object.hasOwn(spriteSheets, saved.get('cat'))) catSelect.value = saved.get('cat');
-if (animations.some(animation => animation.id === saved.get('animation'))) animationSelect.value = saved.get('animation');
 if (['checker', 'light', 'dark'].includes(saved.get('background'))) $('#background').value = saved.get('background');
 
-play.addEventListener('click', () => { playing = !playing; syncPlayback(); });
-$('#step').addEventListener('click', () => {
-  playing = false;
-  for (const preview of previews) paint(preview, (preview.frame + 1) % FRAME_COUNT);
-  // Resume smoothly from the selected frame, even when rows have different timings.
-  for (const preview of previews) preview.offset = preview.frame * preview.animation.duration - elapsed;
-  syncPlayback();
-});
 catSelect.addEventListener('change', render);
-animationSelect.addEventListener('change', render);
 $('#background').addEventListener('change', saveControls);
 $('.controls').addEventListener('submit', event => event.preventDefault());
 document.addEventListener('visibilitychange', syncPlayback);

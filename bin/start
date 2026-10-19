@@ -18,8 +18,7 @@ def main():
     root = Path(__file__).resolve().parent.parent
     port = int(os.environ.get('PORT', '8000'))
     server = ThreadingHTTPServer(('127.0.0.1', port), partial(Handler, directory=str(root)))
-    print(f'MashaJS frame studio: http://localhost:{server.server_port}/', flush=True)
-    print(f'Moving cats demo: http://localhost:{server.server_port}/demo.html', flush=True)
+    print(f'masha.js preview: http://localhost:{server.server_port}/preview/', flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

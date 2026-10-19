@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <link rel="icon" href="data:,">
+  <title>masha.js</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <header><h1>masha.js</h1></header>
+  <main>
+    <section aria-labelledby="current-heading">
+      <div class="section-heading">
+        <h2 id="current-heading">Current cats</h2>
+        <label class="preview-switch">Preview <input id="preview-enabled" type="checkbox" role="switch" checked><span id="preview-state">On</span></label>
+      </div>
+      <p id="live-status" class="note" role="status"></p>
+      <div id="current-cats"></div>
+      <form id="add-cat" class="add-cat">
+        <label>Cat<select id="new-cat"></select></label>
+        <button type="submit">Add cat</button>
+      </form>
+    </section>
+    <section id="embed" aria-labelledby="embed-heading">
+      <h2 id="embed-heading">Add to your website</h2>
+      <p>Paste this before <code>&lt;/body&gt;</code>. It includes your current cats and their behaviors.</p>
+      <pre><code id="embed-code"></code></pre>
+    </section>
+    <section aria-labelledby="studio-heading">
+      <div class="section-heading"><h2 id="studio-heading">The frame studio</h2><span>07 animations · 04 frames each</span></div>
+      <form class="controls" aria-label="Frame studio controls">
+        <label>Companion<select id="cat"></select></label>
+        <label>Backdrop<select id="background"><option value="checker">Transparency grid</option><option value="light">Warm white</option><option value="dark">Midnight</option></select></label>
+        <a id="sheet" href="../lib/assets/opale.webp" target="_blank" rel="noopener">Open sprite sheet ↗</a>
+      </form>
+      <p id="status" role="status">Loading the cats…</p>
+      <div id="gallery" aria-label="Animation previews"></div>
+    </section>
+    <noscript>Enable JavaScript to configure the cats and view their animations.</noscript>
+  </main>
+  <script type="module" src="current-cats.js"></script>
+  <script type="module" src="preview.js"></script>
+</body>
+</html>
