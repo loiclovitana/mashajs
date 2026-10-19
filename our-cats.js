@@ -1,13 +1,13 @@
 // Behaviour and sprite-sheet selection.
 export const ourCats = [
   {
-    name: 'Calico',
+    name: 'Opale',
     personality: 'chaser',
-    sprite: 'calico',
+    sprite: 'opale',
   },
   {
     name: 'Neva Masquerade',
     personality: 'wanderer',
-    sprite: 'neva',
+    sprite: 'masha',
   },
 ];

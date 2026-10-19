@@ -12,16 +12,15 @@ export const animations = Object.freeze([
 ].map((animation, row) => Object.freeze({ ...animation, row })));
 
 export const spriteSheets = Object.freeze({
-  calico: Object.freeze({ name: 'Calico', url: new URL('./assets/calico.webp', import.meta.url).href }),
-  neva: Object.freeze({ name: 'Neva Masquerade', url: new URL('./assets/neva.webp', import.meta.url).href }),
-  calico2: Object.freeze({ name: 'Opale', url: new URL('./assets/calico2.webp', import.meta.url).href }),
+  opale: Object.freeze({ name: 'Opale', url: new URL('./assets/opale.webp', import.meta.url).href }),
+  masha: Object.freeze({ name: 'Masha ', url: new URL('./assets/masha.webp', import.meta.url).href }),
 });
 
 const sheets = new Map();
 const byID = new Map(animations.map(animation => [animation.id, animation]));
 
 /** Load once per URL. Custom sheets use the same 4 × 7 layout. */
-export function loadSprite(sprite = 'calico') {
+export function loadSprite(sprite = 'opale') {
   const url = spriteSheets[sprite]?.url ?? new URL(sprite, import.meta.url).href;
   if (!sheets.has(url)) {
     const image = new Image();
