@@ -28,9 +28,7 @@ const cats: { sprite: BuiltinSprite; personality: Personality; speed?: number }[
   (cat) => ({ ...cat }),
 );
 let companions: CatsController | null = null;
-let desktop = matchMedia(
-  `(min-width: ${settings.minWidth}px) and (hover: hover) and (pointer: fine)`,
-);
+let screenSize = matchMedia(`(min-width: ${settings.minWidth}px)`);
 
 function describe() {
   previewState.textContent = enabled.checked ? 'On' : 'Off';
@@ -45,8 +43,8 @@ function describe() {
           ? 'Loading the cats…'
           : state.active
             ? 'Chasers follow your cursor. Wanderers explore on their own.'
-            : !desktop.matches
-              ? `Roaming cats need a screen at least ${settings.minWidth}px wide and a mouse or trackpad. Explore their animations in the frame studio.`
+            : !screenSize.matches
+              ? `Roaming cats need a screen at least ${settings.minWidth}px wide. Explore their animations in the frame studio.`
               : 'Roaming cats are paused. Turn off reduced motion in your device settings to see them explore.';
 }
 
@@ -190,11 +188,9 @@ settingsForm.addEventListener('change', () => {
   settings.size = size.valueAsNumber;
   settings.minWidth = minWidth.valueAsNumber;
   settings.zIndex = zIndex.valueAsNumber;
-  desktop.removeEventListener('change', scheduleDescription);
-  desktop = matchMedia(
-    `(min-width: ${settings.minWidth}px) and (hover: hover) and (pointer: fine)`,
-  );
-  desktop.addEventListener('change', scheduleDescription);
+  screenSize.removeEventListener('change', scheduleDescription);
+  screenSize = matchMedia(`(min-width: ${settings.minWidth}px)`);
+  screenSize.addEventListener('change', scheduleDescription);
   updateEmbed();
   updatePreview();
 });
@@ -212,7 +208,7 @@ copyCode.addEventListener('click', () => {
 });
 // Read state after the library has handled the same preference/visibility event.
 const scheduleDescription = () => setTimeout(describe, 0);
-desktop.addEventListener('change', scheduleDescription);
+screenSize.addEventListener('change', scheduleDescription);
 matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', scheduleDescription);
 document.addEventListener('visibilitychange', scheduleDescription);
 

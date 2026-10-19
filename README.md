@@ -81,7 +81,7 @@ directory on your site, keeping `assets/` alongside the JavaScript files. Includ
 
 The calico follows your cursor; the Neva Masquerade wanders, grooms, and sleeps.
 The overlay lets clicks through. Cats stop and hide on narrow screens (below
-1024px by default), touch-only devices, hidden tabs, or when reduced motion is
+1024px by default), hidden tabs, or when reduced motion is
 requested. The frame studio works on mobile and starts paused for reduced motion.
 
 After publishing this project to GitHub Pages, the same installation works across

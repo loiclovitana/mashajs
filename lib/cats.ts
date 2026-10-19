@@ -71,7 +71,7 @@ export function createCats({
     display: 'none',
     contain: 'strict',
   });
-  const desktop = matchMedia(`(min-width: ${minWidth}px) and (hover: hover) and (pointer: fine)`);
+  const screenSize = matchMedia(`(min-width: ${minWidth}px)`);
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const listeners = new AbortController();
   let width = innerWidth,
@@ -209,7 +209,7 @@ export function createCats({
 
   function sync() {
     const shouldRun =
-      loaded && !destroyed && !paused && desktop.matches && !reduced.matches && !document.hidden;
+      loaded && !destroyed && !paused && screenSize.matches && !reduced.matches && !document.hidden;
     if (active === shouldRun) return;
     active = shouldRun;
     overlay.style.display = active ? 'block' : 'none';
@@ -254,7 +254,7 @@ export function createCats({
     options,
   );
   document.addEventListener('visibilitychange', sync, options);
-  desktop.addEventListener('change', sync, options);
+  screenSize.addEventListener('change', sync, options);
   reduced.addEventListener('change', sync, options);
 
   const ready = Promise.all(

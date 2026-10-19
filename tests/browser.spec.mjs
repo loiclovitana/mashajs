@@ -310,7 +310,9 @@ test('motion preferences and narrow viewports stop and restart cats', async ({ p
   await expect.poll(active).toBe(true);
 });
 
-test('mobile preview remains usable with live cats disabled', async ({ browser }) => {
+test('mobile preview remains usable and live cats respect the minimum width', async ({
+  browser,
+}) => {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     isMobile: true,
@@ -359,5 +361,14 @@ test('mobile preview remains usable with live cats disabled', async ({ browser }
       expect(box.height).toBeGreaterThanOrEqual(44);
     }
   }
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.getByLabel('Minimum screen width (px)', { exact: true }).fill('768');
+  await page.getByLabel('Minimum screen width (px)', { exact: true }).press('Tab');
+  await expect(page.locator('[data-desktop-cats]')).toBeVisible();
+  await expect(page.locator('#live-status')).toContainText('Chasers follow your cursor');
+  await page.setViewportSize({ width: 767, height: 844 });
+  await expect(page.locator('[data-desktop-cats]')).toBeHidden();
+  await page.setViewportSize({ width: 768, height: 844 });
+  await expect(page.locator('[data-desktop-cats]')).toBeVisible();
   await context.close();
 });
